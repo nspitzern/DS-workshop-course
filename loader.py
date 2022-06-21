@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 def load_data(root_dir: str, preprocessing=False):
-    if not preprocessing:
+    if preprocessing:
         artists_path = os.path.join(root_dir, 'artists.csv')
         tracks_path = os.path.join(root_dir, 'tracks.csv')
     else:
@@ -17,7 +17,7 @@ def load_data(root_dir: str, preprocessing=False):
     df_tracks = pd.read_csv(tracks_path)
     
     # do preprocessing on the data if needed
-    if not preprocessing:
+    if preprocessing:
         print('preprocessing begin')
         df_tracks, df_artists = _preprocess_data(df_tracks, df_artists)
     
@@ -25,13 +25,16 @@ def load_data(root_dir: str, preprocessing=False):
 
 def _preprocess_data(df_tracks: pd.DataFrame, df_artists: pd.DataFrame):
     # drop unneccesery columns
+    print('Dropping unneccesery columns...')
     df_tracks.drop(['id', 'artists'], axis=1, inplace=True)
     
     # rename columns
+    print('Renaming columns...')
     df_artists.rename({'popularity': 'artist_popularity', 'name': 'artist_name'}, axis=1, inplace=True)
     df_tracks.rename({'release_date': 'year', 'name': 'song_name'}, axis=1, inplace=True)
     
     # Remove duplicated from data
+    print('Removing duplicates...')
     tracks_rows = _remove_duplicates(df_tracks)
     artists_rows = _remove_duplicates(df_artists)
     
@@ -42,9 +45,11 @@ def _preprocess_data(df_tracks: pd.DataFrame, df_artists: pd.DataFrame):
         print(f'\n\033[1mInference:\033[0m Number of duplicates dropped/fixed from artists ---> {artists_rows}')
     
     # Fill/Drop missing data
+    print('Filling/Dropping missing data...')
     df_tracks, df_artists = _fill_missing_data(df_tracks, df_artists)
     
     # Convert lists to individual items
+    print('Expanding lists...')
     df_tracks, df_artists = _convert_lists(df_tracks, df_artists)
     
     # Convert release-date to year
