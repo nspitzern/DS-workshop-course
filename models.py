@@ -53,7 +53,7 @@ def get_models_results(df, target, test_size=0.2, verbose=True):
             'forest_reg': _get_scores(forest_reg, forest_reg.predict, X_test, y_test, target),
             'ada_reg': _get_scores(ada_reg, ada_reg.predict, X_test, y_test, target),
             'xg_reg_model': _get_scores(xg_reg_model, xg_reg_model.predict, X_test, y_test, target),
-            'dnn_model': _get_scores(dnn_predict, dnn_predict, X_test, y_test, target, dnn=True)
+            'dnn_model': _get_scores(dnn_model, dnn_predict, X_test, y_test, target, dnn=True)
     }
     
     print(results_map)
