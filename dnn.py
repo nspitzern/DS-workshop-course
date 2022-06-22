@@ -116,7 +116,7 @@ def _evaluate_dnn(nn_model, data_loader, data_size, criterion, device):
         total_loss = total_loss / data_size
         return total_loss
     
-def dnn_predict(X_test):
+def dnn_predict(nn_model, X_test):
     test_data = torch.tensor(X_test.values).float().to(device)
     
     y_hat = nn_model(test_data)
