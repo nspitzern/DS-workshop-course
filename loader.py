@@ -33,7 +33,7 @@ def _preprocess_data(df_tracks: pd.DataFrame, df_artists: pd.DataFrame):
     
     # rename columns
     print('Renaming columns...')
-    df_artists.rename({'popularity': 'artist_popularity', 'name': 'artist_name'}, axis=1, inplace=True)
+    df_artists.rename({'popularity': 'artist_popularity', 'name': 'artist_name', 'id': 'id_artists'}, axis=1, inplace=True)
     df_tracks.rename({'release_date': 'year', 'name': 'song_name'}, axis=1, inplace=True)
     
     # Remove duplicated from data
