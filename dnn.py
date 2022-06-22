@@ -97,7 +97,7 @@ def _train_dnn(nn_model, train_loader, test_loader, train_data_size, test_data_s
     return train_losses, test_losses
     
 
-def _evaluate_dnn(nn_model, test_loader, test_data_size, criterion, device):
+def _evaluate_dnn(nn_model, data_loader, test_data_size, criterion, device):
     nn_model.eval()
 
     with torch.no_grad():
