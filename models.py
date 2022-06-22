@@ -33,11 +33,17 @@ def get_models_results(df, target, test_size=0.2, verbose=True):
     
     # run each model
     print('Running models...')
+    print('Running Linear Regression...')
     reg_model = reg_model.fit(X_train, y_train[target])
+    print('Running Decision Tree...')
     reg_tree = reg_tree.fit(X_train, y_train[target])
+    print('Running Random Forest...')
     forest_reg = forest_reg.fit(X_train, y_train[target])
+    print('Running AdaBoosting...')
     ada_reg = ada_reg.fit(X_train, y_train[target])
+    print('Running XGBoost')
     xg_reg_model = xg_reg_model.fit(X_train, y_train[target])
+    print('Running Neural Network...')
     train_losses, test_losses = get_dnn_results(X_train, X_test, y_train, y_test, dnn_model, verbose=False)
     
     # evaluate results
@@ -51,6 +57,8 @@ def get_models_results(df, target, test_size=0.2, verbose=True):
     }
     
     print(results_map)
+    
+    return results_map
 
 def _get_scores(prediction_func, X, y, target):
     y_hat = prediction_func(X)
