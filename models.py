@@ -1,3 +1,5 @@
+import json
+
 import sklearn
 from sklearn.linear_model import LinearRegression, LogisticRegression, ElasticNet, Ridge, Lasso
 from sklearn.tree import DecisionTreeRegressor
@@ -12,9 +14,12 @@ import numpy as np
 
 from dnn import get_dnn_model, get_dnn_results, dnn_predict
 
-def get_models_results(df, target, test_size=0.2, ignore_columns=None, load_data=False, verbose=True):
+def get_models_results(df, target, test_size=0.2, ignore_columns=None, load_data=False, data_file_path='', verbose=True):
     if load_data:
-        results_map = np.load('basic_models_results.json')
+        assert data_file_path != '', "Please provide path to the data"
+        
+        with open(data_file_path, 'r') as f:
+            results_map = json.load(f)
     else:
         # split to train and test
         print('Splitting to Train/Test...')
