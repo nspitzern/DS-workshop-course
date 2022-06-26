@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 def load_data(root_dir: str, load_data=False):
-    if load_data:
+    if not load_data:
         artists_path = os.path.join(root_dir, 'artists.csv')
         tracks_path = os.path.join(root_dir, 'tracks.csv')
     else:
@@ -17,7 +17,7 @@ def load_data(root_dir: str, load_data=False):
     df_tracks = pd.read_csv(tracks_path)
     
     # do preprocessing on the data if needed
-    if preprocessing:
+    if not load_data:
         print('preprocessing begin')
         df_tracks, df_artists = _preprocess_data(df_tracks, df_artists)
     
