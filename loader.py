@@ -4,8 +4,8 @@ from typing import Tuple
 import pandas as pd
 import numpy as np
 
-def load_data(root_dir: str, preprocessing=False):
-    if preprocessing:
+def load_data(root_dir: str, load_data=False):
+    if load_data:
         artists_path = os.path.join(root_dir, 'artists.csv')
         tracks_path = os.path.join(root_dir, 'tracks.csv')
     else:

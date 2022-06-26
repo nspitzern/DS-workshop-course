@@ -12,14 +12,16 @@ import numpy as np
 
 from dnn import get_dnn_model, get_dnn_results, dnn_predict
 
-def get_models_results(df, target, test_size=0.2, load_data=False, verbose=True):
+def get_models_results(df, target, test_size=0.2, ignore_columns=None, load_data=False, verbose=True):
     if load_data:
-        results_map = np.load('basic_models_results.npy')
+        results_map = np.load('basic_models_results.json')
     else:
         # split to train and test
         print('Splitting to Train/Test...')
+        ignore_columns = ignore_columns if ignore_columns is not None else []
+        
         y = df[[target]]
-        X = df.drop([target], axis=1)
+        X = df.drop([target] + ignore_columns, axis=1)
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
 
