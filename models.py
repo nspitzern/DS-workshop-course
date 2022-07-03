@@ -2,6 +2,8 @@ import json
 
 import pickle
 
+import torch
+
 import sklearn
 from sklearn.linear_model import LinearRegression, LogisticRegression, ElasticNet, Ridge, Lasso
 from sklearn.tree import DecisionTreeRegressor
@@ -23,6 +25,15 @@ def get_models(filepath='', dnn_dim=None):
     if filepath != '':    
         with open(filepath, 'rb') as f:
             models = pickle.load(f)
+            
+            dnn_model = get_dnn_model(dnn_dim)
+            dnn_model.load_state_dict(torch.load('dnn_model.pth'))
+            
+            models.update({
+                'dnn_model': dnn_model
+            })
+            
+            print('Models Loaded!')
     else:
         assert dnn_dim is not None, "Please provide in_dim for the dnn model (len(X_train.columns))"
         # create models
@@ -43,9 +54,11 @@ def get_models(filepath='', dnn_dim=None):
             'dnn_model': dnn_model
         })
         
+        print('Models Created!')
+        
     return models
 
-def get_models_results(df, target, models, test_size=0.2, ignore_columns=None, load_data=False, data_file_path='', verbose=True):
+def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=None, load_data=False, data_file_path='', verbose=True):
     if load_data:
         assert data_file_path != '', "Please provide path to the data"
         
