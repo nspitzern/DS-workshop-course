@@ -92,7 +92,8 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
         print('Running XGBoost')
         xg_reg_model = models['xg_reg_model'].fit(X_train, y_train[target])
         print('Running Neural Network...')
-        train_losses, test_losses = get_dnn_results(X_train, X_test, y_train, y_test, models['dnn_model'], verbose)
+        dnn_model = models['dnn_model']
+        train_losses, test_losses = get_dnn_results(X_train, X_test, y_train, y_test, dnn_model, verbose)
 
         # evaluate results
         results_map = {
