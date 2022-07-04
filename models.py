@@ -19,15 +19,17 @@ import numpy as np
 from dnn import get_dnn_model, get_dnn_results, dnn_predict
 
 
-def get_models(filepath='', dnn_dim=None):
+def get_models(filepath='', dnn_dim=None, is_basic=False):
     models = dict()
+    assert dnn_dim is not None, "Please provide in_dim for the dnn model (len(X_train.columns))"
     
     if filepath != '':    
         with open(filepath, 'rb') as f:
             models = pickle.load(f)
             
             dnn_model = get_dnn_model(dnn_dim)
-            dnn_model.load_state_dict(torch.load('dnn_model.pth'))
+            dnn_model_path = f'{"basic_" if is_basic else ""}dnn_model.pth'
+            dnn_model.load_state_dict(torch.load(dnn_model_path))
             
             models.update({
                 'dnn_model': dnn_model
@@ -80,7 +82,7 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
         # run each model
         print('Running models...')
         print('Running Linear Regression...')
-        reg_model = models['reg_model'].fit(X_train, y_train[target])
+        reg_model = models['lin_reg'].fit(X_train, y_train[target])
         print('Running Decision Tree...')
         reg_tree = models['reg_tree'].fit(X_train, y_train[target])
         print('Running Random Forest...')
