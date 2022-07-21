@@ -28,7 +28,7 @@ class Model(nn.Module):
     def __init__(self, in_dim, hidden_dim, out_dim, drop=0.3):
         super().__init__()
         
-        self.ff = nn.Sequential(
+        self.fc = nn.Sequential(
             nn.Linear(in_dim, hidden_dim),
             nn.Dropout(drop),
             nn.SELU(),
@@ -36,8 +36,15 @@ class Model(nn.Module):
         )
         
     def forward(self, x):
-        out = self.ff(x)
+        out = self.fc(x)
         return out
+    
+    def predict(self, X):
+        data = torch.tensor(X.values).float().to(device)
+
+        y_hat = self.forward(data)
+
+        return y_hat.detach().numpy()
     
 def get_dnn_model(in_dim):
     return Model(in_dim, HIDDEN_SIZE, 1).to(device)
@@ -115,10 +122,3 @@ def _evaluate_dnn(nn_model, data_loader, data_size, criterion, device):
 
         total_loss = total_loss / data_size
         return total_loss
-    
-def dnn_predict(nn_model, X_test):
-    test_data = torch.tensor(X_test.values).float().to(device)
-    
-    y_hat = nn_model(test_data)
-    
-    return y_hat.detach().numpy()

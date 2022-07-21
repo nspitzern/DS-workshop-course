@@ -16,7 +16,7 @@ from xgboost import XGBClassifier, XGBRegressor
 
 import numpy as np
 
-from dnn import get_dnn_model, get_dnn_results, dnn_predict
+from dnn import get_dnn_model, get_dnn_results
 
 
 def get_models(filepath='', dnn_dim=None, is_basic=False):
@@ -102,7 +102,7 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
                 'forest_reg': _get_scores(forest_reg, forest_reg.predict, X_test, y_test, target),
                 'ada_reg': _get_scores(ada_reg, ada_reg.predict, X_test, y_test, target),
                 'xg_reg_model': _get_scores(xg_reg_model, xg_reg_model.predict, X_test, y_test, target),
-                'dnn_model': _get_scores(dnn_model, dnn_predict, X_test, y_test, target, dnn=True)
+                'dnn_model': _get_scores(dnn_model, dnn_model.predict, X_test, y_test, target, dnn=True)
         }
     
     return results_map
