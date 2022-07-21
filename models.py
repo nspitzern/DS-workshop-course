@@ -97,21 +97,18 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
 
         # evaluate results
         results_map = {
-                'lin_reg': _get_scores(reg_model, reg_model.predict, X_test, y_test, target),
-                'reg_tree': _get_scores(reg_tree, reg_tree.predict, X_test, y_test, target),
-                'forest_reg': _get_scores(forest_reg, forest_reg.predict, X_test, y_test, target),
-                'ada_reg': _get_scores(ada_reg, ada_reg.predict, X_test, y_test, target),
-                'xg_reg_model': _get_scores(xg_reg_model, xg_reg_model.predict, X_test, y_test, target),
-                'dnn_model': _get_scores(dnn_model, dnn_model.predict, X_test, y_test, target, dnn=True)
+                'lin_reg': _get_scores(reg_model.predict, X_test, y_test, target),
+                'reg_tree': _get_scores(reg_tree.predict, X_test, y_test, target),
+                'forest_reg': _get_scores(forest_reg.predict, X_test, y_test, target),
+                'ada_reg': _get_scores(ada_reg.predict, X_test, y_test, target),
+                'xg_reg_model': _get_scores(xg_reg_model.predict, X_test, y_test, target),
+                'dnn_model': _get_scores(dnn_model.predict, X_test, y_test, target)
         }
     
     return results_map
 
-def _get_scores(model, prediction_func, X, y, target, dnn=False):
-    if dnn:
-        y_hat = prediction_func(model, X)
-    else:
-        y_hat = prediction_func(X)
+def _get_scores(prediction_func, X, y, target):
+    y_hat = prediction_func(X)
     
     mse = mean_squared_error(y_hat, y[target])
     rmse = mean_squared_error(y_hat, y[target], squared=False)
