@@ -42,8 +42,8 @@ def get_models(filepath='', dnn_dim=None, is_basic=False):
         print('Creating models...')
         reg_model = LinearRegression()
         reg_tree = DecisionTreeRegressor()
-        forest_reg = RandomForestRegressor(n_estimators=50, max_depth=5, n_jobs=5)
-        ada_reg = AdaBoostRegressor(DecisionTreeRegressor(), n_estimators=50)
+        forest_reg = RandomForestRegressor()
+        ada_reg = AdaBoostRegressor(DecisionTreeRegressor())
         xg_reg_model = XGBRegressor()
         dnn_model = get_dnn_model(dnn_dim)
         
@@ -60,7 +60,7 @@ def get_models(filepath='', dnn_dim=None, is_basic=False):
         
     return models
 
-def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=None, load_data=False, data_file_path='', verbose=True):
+def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=None, load_data=False, data_file_path='', save_models=False, is_basic=False, verbose=True):
     if load_data:
         assert data_file_path != '', "Please provide path to the data"
         
@@ -78,6 +78,8 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
 
         print(f'Train Size: X={X_train.shape}, Y={y_train.shape}')
         print(f'Test Size: X={X_test.shape}, Y={y_test.shape}')
+        
+        assert models is not None, 'Please provide models'
 
         # run each model
         print('Running models...')
@@ -94,6 +96,11 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
         print('Running Neural Network...')
         dnn_model = models['dnn_model']
         train_losses, test_losses = get_dnn_results(X_train, X_test, y_train, y_test, dnn_model, verbose)
+        
+        if save_models:
+            torch.save(dnn_model.state_dict(), f'{"basic_" if is_basic else ""}dnn_model.pth')
+            with open(f'{"basic_" if is_basic else ""}models.pickle', 'wb') as f:
+                pickle.dump(models, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         # evaluate results
         results_map = {
