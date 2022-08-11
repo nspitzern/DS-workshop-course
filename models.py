@@ -5,12 +5,10 @@ import pickle
 import torch
 
 import sklearn
-from sklearn.linear_model import LinearRegression, LogisticRegression, ElasticNet, Ridge, Lasso
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import AdaBoostRegressor, RandomForestRegressor
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, mean_absolute_percentage_error
 
 from xgboost import XGBRegressor
 
@@ -41,19 +39,9 @@ def get_models(filepath='', dnn_dim=None, is_basic=False):
         # create models
         print('Creating models...')
         reg_model = LinearRegression()
-        reg_tree = DecisionTreeRegressor()
-        forest_reg = RandomForestRegressor()
-        ada_reg = AdaBoostRegressor(DecisionTreeRegressor())
-        xg_reg_model = XGBRegressor()
-        dnn_model = get_dnn_model(dnn_dim)
         
         models.update({
-            'lin_reg': reg_model,
-            'reg_tree': reg_tree,
-            'forest_reg': forest_reg,
-            'ada_reg': ada_reg,
-            'xg_reg_model': xg_reg_model,
-            'dnn_model': dnn_model
+            'lin_reg': reg_model
         })
         
         print('Models Created!')
@@ -85,31 +73,14 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
         print('Running models...')
         print('Running Linear Regression...')
         reg_model = models['lin_reg'].fit(X_train, y_train[target])
-        print('Running Decision Tree...')
-        reg_tree = models['reg_tree'].fit(X_train, y_train[target])
-        print('Running Random Forest...')
-        forest_reg = models['forest_reg'].fit(X_train, y_train[target])
-        print('Running AdaBoosting...')
-        ada_reg = models['ada_reg'].fit(X_train, y_train[target])
-        print('Running XGBoost')
-        xg_reg_model = models['xg_reg_model'].fit(X_train, y_train[target])
-        print('Running Neural Network...')
-        dnn_model = models['dnn_model']
-        train_losses, test_losses = get_dnn_results(X_train, X_test, y_train, y_test, dnn_model, verbose)
         
         if save_models:
-            torch.save(dnn_model.state_dict(), f'{"basic_" if is_basic else ""}dnn_model.pth')
             with open(f'{"basic_" if is_basic else ""}models.pickle', 'wb') as f:
                 pickle.dump(models, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         # evaluate results
         results_map = {
-                'lin_reg': _get_scores(reg_model.predict, X_test, y_test, target),
-                'reg_tree': _get_scores(reg_tree.predict, X_test, y_test, target),
-                'forest_reg': _get_scores(forest_reg.predict, X_test, y_test, target),
-                'ada_reg': _get_scores(ada_reg.predict, X_test, y_test, target),
-                'xg_reg_model': _get_scores(xg_reg_model.predict, X_test, y_test, target),
-                'dnn_model': _get_scores(dnn_model.predict, X_test, y_test, target)
+                'lin_reg': _get_scores(reg_model.predict, X_test, y_test, target)
         }
     
     return results_map
@@ -117,9 +88,9 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
 def _get_scores(prediction_func, X, y, target):
     y_hat = prediction_func(X)
     
-    mse = mean_squared_error(y_hat, y[target])
+    mape = mean_absolute_percentage_error(y_hat, y[target])
     rmse = mean_squared_error(y_hat, y[target], squared=False)
     mae = mean_absolute_error(y_hat, y[target])
     r2 = r2_score(y_hat, y[target])
     
-    return {'MSE': mse, 'RMSE': rmse, 'MAE': mae, 'R^2': r2}
+    return {'MAPE': mape, 'RMSE': rmse, 'MAE': mae, 'R^2': r2}
