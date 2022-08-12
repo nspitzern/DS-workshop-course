@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 import pandas as pd
 import numpy as np
 
@@ -15,21 +17,16 @@ def display_side_by_side(*args,titles=cycle([''])):
     display_html(html_str,raw=True)
 
 
-def get_scores_matrics(results):
-    scores = pd.DataFrame(data={'MAPE': [
-                                        results['lin_reg']['MAPE']
-                                       ],
-                           'RMSE': [
-                                    results['lin_reg']['RMSE']
-                                   ],
-                           'MAE': [
-                                   results['lin_reg']['MAE']
-                                  ],
-                           'R^2': [
-                                   results['lin_reg']['R^2']
-                                  ]
-                            },
-                     index=['Linear Regression'])
+def get_scores_matrics(results, *args):
+    data = defaultdict(list)
+    
+    for model in results:
+        data['MAPE'].append(results[model]['MAPE'])
+        data['RMSE'].append(results[model]['RMSE'])
+        data['MAE'].append(results[model]['MAE'])
+        data['R^2'].append(results[model]['R^2'])
+    
+    scores = pd.DataFrame(data=data, index=[*args])
     return scores.style.apply(_highlight)
 
 

@@ -14,28 +14,16 @@ from xgboost import XGBRegressor
 
 import numpy as np
 
-from dnn import get_dnn_model, get_dnn_results
 
-
-def get_models(filepath='', dnn_dim=None, is_basic=False):
+def get_models(filepath='', is_basic=False):
     models = dict()
-    assert dnn_dim is not None, "Please provide in_dim for the dnn model (len(X_train.columns))"
     
     if filepath != '':    
         with open(filepath, 'rb') as f:
             models = pickle.load(f)
             
-            dnn_model = get_dnn_model(dnn_dim)
-            dnn_model_path = f'{"basic_" if is_basic else ""}dnn_model.pth'
-            dnn_model.load_state_dict(torch.load(dnn_model_path))
-            
-            models.update({
-                'dnn_model': dnn_model
-            })
-            
             print('Models Loaded!')
     else:
-        assert dnn_dim is not None, "Please provide in_dim for the dnn model (len(X_train.columns))"
         # create models
         print('Creating models...')
         reg_model = LinearRegression()

@@ -23,10 +23,7 @@ def load_data(root_dir: str, load_data=False):
     
     return df_tracks, df_artists
 
-def _preprocess_data(df_tracks: pd.DataFrame, df_artists: pd.DataFrame):
-    # Adding number of artists for each song
-    df_tracks['num_artists'] = df_tracks.artists.apply(lambda x: len(x))
-    
+def _preprocess_data(df_tracks: pd.DataFrame, df_artists: pd.DataFrame):    
     # drop unneccesery columns
     print('Dropping unneccesery columns...')
     df_tracks.drop(['id', 'artists'], axis=1, inplace=True)
