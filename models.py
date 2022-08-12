@@ -44,7 +44,8 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
             results_map = json.load(f)
     else:
         # split to train and test
-        print('Splitting to Train/Test...')
+        if verbose:
+            print('Splitting to Train/Test...')
         ignore_columns = ignore_columns if ignore_columns is not None else []
         
         y = df[[target]]
@@ -52,14 +53,16 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
 
-        print(f'Train Size: X={X_train.shape}, Y={y_train.shape}')
-        print(f'Test Size: X={X_test.shape}, Y={y_test.shape}')
+        if verbose:
+            print(f'Train Size: X={X_train.shape}, Y={y_train.shape}')
+            print(f'Test Size: X={X_test.shape}, Y={y_test.shape}')
         
         assert models is not None, 'Please provide models'
 
         # run each model
-        print('Running models...')
-        print('Running Linear Regression...')
+        if verbose:
+            print('Running models...')
+            print('Running Linear Regression...')
         reg_model = models['lin_reg'].fit(X_train, y_train[target])
         
         if save_models:
