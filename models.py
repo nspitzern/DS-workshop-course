@@ -15,24 +15,27 @@ from xgboost import XGBRegressor
 import numpy as np
 
 
-def get_models(filepath='', is_basic=False):
+def get_models(filepath='', verbose=False):
     models = dict()
     
     if filepath != '':    
         with open(filepath, 'rb') as f:
             models = pickle.load(f)
             
-            print('Models Loaded!')
+            if verbose:
+                print('Models Loaded!')
     else:
         # create models
-        print('Creating models...')
+        if verbose:
+            print('Creating models...')
         reg_model = LinearRegression()
         
         models.update({
             'lin_reg': reg_model
         })
         
-        print('Models Created!')
+        if verbose:
+            print('Models Created!')
         
     return models
 
