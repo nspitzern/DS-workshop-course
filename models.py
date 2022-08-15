@@ -53,7 +53,7 @@ def get_models_results(df, target, model=None, test_size=0.2, ignore_columns=Non
             print(f'Train Size: X={X_train.shape}, Y={y_train.shape}')
             print(f'Test Size: X={X_test.shape}, Y={y_test.shape}')
         
-        assert models is not None, 'Please provide model'
+        assert model is not None, 'Please provide model'
 
         # run each model
         if verbose:
