@@ -109,6 +109,8 @@ def convert_genres(df):
         
     random.seed(42)
     
+    df["genres"].fillna('[]', inplace = True)
+    
     genres = _get_genres(df)
     
     df["genres"] = df["genres"].apply(_replace_genall)
