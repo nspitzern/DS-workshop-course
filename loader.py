@@ -122,7 +122,6 @@ def convert_genres(df):
     top_gen.append("UNK")
     df["genres"] = df["genres"].apply(_replace_genall)
     df["genres"].fillna("UNK", inplace = True)
-    df.gernes[~df["genres"].isin(top_gen)] = "UNK"
-    print(top_gen)
+    df.genres[~df["genres"].isin(top_gen)] = "UNK"
     
     return df
