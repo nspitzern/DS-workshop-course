@@ -113,8 +113,9 @@ def convert_genres(df):
     
     genres = _get_genres(df)
     
-    df["genres"] = df["genres"].apply(_replace_genall)
-    df = df.dropna(subset = ['genres'])
+    small_df = df.copy()
+    small_df["genres"] = small_df["genres"].apply(replace_genall)
+    small_df = small_df.dropna(subset = ['genres'])
     
     top_gen = small_df["genres"].value_counts()[2:102].index.tolist()
     top_gen.append("UNK")
