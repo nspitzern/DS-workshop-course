@@ -7,10 +7,7 @@ import torch
 import sklearn
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, mean_absolute_percentage_error
-
-from xgboost import XGBRegressor
 
 import numpy as np
 
@@ -20,26 +17,22 @@ def get_models(filepath='', verbose=False):
     
     if filepath != '':    
         with open(filepath, 'rb') as f:
-            models = pickle.load(f)
+            model = pickle.load(f)
             
             if verbose:
-                print('Models Loaded!')
+                print('Model Loaded!')
     else:
         # create models
         if verbose:
             print('Creating models...')
-        reg_model = LinearRegression()
-        
-        models.update({
-            'lin_reg': reg_model
-        })
+        model = LinearRegression()
         
         if verbose:
-            print('Models Created!')
+            print('Model Created!')
         
-    return models
+    return model
 
-def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=None, load_data=False, data_file_path='', save_models=False, is_basic=False, verbose=True):
+def get_models_results(df, target, model=None, test_size=0.2, ignore_columns=None, load_data=False, data_file_path='', save_models=False, is_basic=False, verbose=True):
     if load_data:
         assert data_file_path != '', "Please provide path to the data"
         
@@ -60,22 +53,19 @@ def get_models_results(df, target, models=None, test_size=0.2, ignore_columns=No
             print(f'Train Size: X={X_train.shape}, Y={y_train.shape}')
             print(f'Test Size: X={X_test.shape}, Y={y_test.shape}')
         
-        assert models is not None, 'Please provide models'
+        assert models is not None, 'Please provide model'
 
         # run each model
         if verbose:
-            print('Running models...')
-            print('Running Linear Regression...')
-        reg_model = models['lin_reg'].fit(X_train, y_train[target])
+            print('Running model...')
+        model.fit(X_train, y_train[target])
         
         if save_models:
-            with open(f'{"basic_" if is_basic else ""}models.pickle', 'wb') as f:
-                pickle.dump(models, f, protocol=pickle.HIGHEST_PROTOCOL)
+            with open(f'{"basic_" if is_basic else ""}model.pickle', 'wb') as f:
+                pickle.dump(model, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         # evaluate results
-        results_map = {
-                'lin_reg': _get_scores(reg_model.predict, X_test, y_test, target)
-        }
+        results_map = _get_scores(model.predict, X_test, y_test, target)
     
     return results_map
 
