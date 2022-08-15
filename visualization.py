@@ -21,7 +21,6 @@ def get_scores_matrics(results, *args):
     data = defaultdict(list)
     
     for model_results in results:
-        data['MAPE'].append(model_results['MAPE'])
         data['RMSE'].append(model_results['RMSE'])
         data['MAE'].append(model_results['MAE'])
         data['R^2'].append(model_results['R^2'])
