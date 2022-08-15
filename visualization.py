@@ -20,11 +20,11 @@ def display_side_by_side(*args,titles=cycle([''])):
 def get_scores_matrics(results, *args):
     data = defaultdict(list)
     
-    for model_idx in results:
-        data['MAPE'].append(results[model_idx]['MAPE'])
-        data['RMSE'].append(results[model_idx]['RMSE'])
-        data['MAE'].append(results[model_idx]['MAE'])
-        data['R^2'].append(results[model_idx]['R^2'])
+    for model_results in results:
+        data['MAPE'].append(model_results['MAPE'])
+        data['RMSE'].append(model_results['RMSE'])
+        data['MAE'].append(model_results['MAE'])
+        data['R^2'].append(model_results['R^2'])
     
     scores = pd.DataFrame(data=data, index=[*args])
     return scores.style.apply(_highlight)
