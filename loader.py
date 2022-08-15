@@ -1,5 +1,7 @@
 import os
 from typing import Tuple
+from random import choice
+import random
 
 import pandas as pd
 import numpy as np
@@ -55,6 +57,9 @@ def _preprocess_data(df_tracks: pd.DataFrame, df_artists: pd.DataFrame):
     # Convert release-date to year
     df_tracks.year = df_tracks.year.apply(lambda x: int(x.split('-')[0]))
     
+    # remove time signature of 0 (impossible)
+    df.drop(df[df["time_signature"] == 0].index, axis=1, inplace=True)
+    
     return df_tracks, df_artists
     
 def _remove_duplicates(df):
@@ -79,3 +84,40 @@ def _convert_lists(df_tracks, df_artists):
     df_tracks = df_tracks.explode('id_artists')
     
     return df_tracks, df_artists
+
+def convert_genres(df):
+    def _get_gernres(df):
+        genlist = df['genres'].dropna().apply(eval).tolist()
+
+        genset = set()
+        for gen in genlist:
+            if type(gen) == list:
+                for g in gen:
+                    genset.add(g.lower())
+            else:
+                genset.add(gen.lower)
+        genres = sorted(genset)
+        
+        return genres
+    
+    def _replace_genall(input):
+        input = eval(input)
+        if len(input) > 2 or len(input) == 0:
+            return np.nan
+        else:
+            return choice(input)
+        
+    random.seed(42)
+    
+    genres = _get_genres(df)
+    
+    df["genres"] = df["genres"].apply(replace_genall)
+    df = df.dropna(subset = ['genres'])
+    
+    top_gen = small_df["genres"].value_counts()[2:102].index.tolist()
+    top_gen.append("UNK")
+    df["genres"] = df["genres"].apply(replace_genall)
+    df["genres"].fillna("UNK", inplace = True)
+    df = df[df["genres"].isin(top_gen)]
+    
+    return df
