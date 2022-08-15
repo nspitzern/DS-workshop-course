@@ -86,7 +86,7 @@ def _convert_lists(df_tracks, df_artists):
     return df_tracks, df_artists
 
 def convert_genres(df):
-    def _get_gernres(df):
+    def _get_genres(df):
         genlist = df['genres'].dropna().apply(eval).tolist()
 
         genset = set()
