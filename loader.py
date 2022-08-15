@@ -100,12 +100,12 @@ def convert_genres(df):
         
         return genres
     
-    def _replace_genall(input):
-        input = eval(input)
-        if len(input) > 2 or len(input) == 0:
+    def _replace_genall(gen):
+        gen = eval(gen)
+        if len(gen) > 2 or len(gen) == 0:
             return np.nan
         else:
-            return choice(input)
+            return choice(gen)
         
     random.seed(42)
     
