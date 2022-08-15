@@ -108,28 +108,19 @@ def convert_genres(df):
             return choice(gen)
         
     random.seed(42)
-    print(f'start: {df.shape}')
     
     df["genres"].fillna('[]', inplace = True)
-    print(f'after fillna 1: {df.shape}')
     
     genres = _get_genres(df)
-    print(f'after get genres: {df.shape}')
     
     small_df = df.copy()
     small_df["genres"] = small_df["genres"].apply(_replace_genall)
-    print(f'after replace 1: {df.shape}')
     small_df = small_df.dropna(subset = ['genres'])
-    print(f'after small_df dropna: {df.shape}')
     
     top_gen = small_df["genres"].value_counts()[2:102].index.tolist()
-    print(f'after top gen: {df.shape}')
     top_gen.append("UNK")
     df["genres"] = df["genres"].apply(_replace_genall)
-    print(f'after replace 2: {df.shape}')
     df["genres"].fillna("UNK", inplace = True)
-    print(f'after fillna 2: {df.shape}')
-    df = df[df["genres"].isin(top_gen)]
-    print(f'end: {df.shape}')
+    df[~df["genres"].isin(top_gen)] = "UNK"
     
     return df
