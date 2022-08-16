@@ -58,7 +58,7 @@ def _preprocess_data(df_tracks: pd.DataFrame, df_artists: pd.DataFrame):
     df_tracks.year = df_tracks.year.apply(lambda x: int(x.split('-')[0]))
     
     # remove time signature of 0 (impossible)
-    df_tracks.drop(df_tracks[df_tracks["time_signature"] == 0].index, inplace=True)
+    df_tracks = df_tracks[df_tracks["time_signature"] > 0]
     
     return df_tracks, df_artists
     
