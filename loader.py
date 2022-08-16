@@ -57,9 +57,6 @@ def _preprocess_data(df_tracks: pd.DataFrame, df_artists: pd.DataFrame):
     # Convert release-date to year
     df_tracks.year = df_tracks.year.apply(lambda x: int(x.split('-')[0]))
     
-    # remove time signature of 0 (impossible)
-    df_tracks = df_tracks[df_tracks.time_signature > 0]
-    
     return df_tracks, df_artists
     
 def _remove_duplicates(df):
