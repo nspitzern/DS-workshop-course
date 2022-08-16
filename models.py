@@ -72,8 +72,8 @@ def get_models_results(df, target, model=None, test_size=0.2, ignore_columns=Non
 def _get_scores(prediction_func, X, y):
     y_hat = prediction_func(X)
     
-    rmse = mean_squared_error(y_hat, y, squared=False)
-    mae = mean_absolute_error(y_hat, y)
-    r2 = r2_score(y_hat, y)
+    rmse = mean_squared_error(y, y_hat, squared=False)
+    mae = mean_absolute_error(y, y_hat)
+    r2 = r2_score(y, y_hat)
     
     return {'RMSE': rmse, 'MAE': mae, 'R^2': r2}
